@@ -26,7 +26,7 @@ class WingsException implements Exception {
     }
   }
 
-  factory WingsException.fromEnumeration(ExceptionTypes types) {
+  factory WingsException.fromEnumeration([ExceptionTypes? types]) {
     switch (types) {
       case ExceptionTypes.cache:
         return CacheException();
@@ -38,7 +38,7 @@ class WingsException implements Exception {
         return TimeoutException();
       case ExceptionTypes.empty:
         return EmptyException();
-      case ExceptionTypes.unexpected:
+      default:
         return UnexpectedException();
     }
   }

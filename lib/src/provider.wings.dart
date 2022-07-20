@@ -17,7 +17,7 @@ class WingsDataProvider {
 
   static WingsDataProvider? _singleton;
 
-  bool get remoteConnection => WingsNetworkManager().singleton.hasConnection;
+  bool get remoteConnection => WingsNetworkManager().hasConnection;
 
   Future<dynamic> sendRequest({
     GetDataFunction? remoteFunction,

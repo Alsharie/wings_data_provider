@@ -10,32 +10,30 @@ import '../errors/exceptions.enum.wings.dart';
 import '../errors/exceptions.wings.dart';
 import 'methods.enums.wings.dart';
 
-class WingRemoteProvider {
-  factory WingRemoteProvider() {
-    _singleton ??= WingRemoteProvider._();
+class WingsRemoteProvider {
+  factory WingsRemoteProvider() {
+    _singleton ??= WingsRemoteProvider._();
 
     return _singleton!;
   }
 
-  WingRemoteProvider._();
+  WingsRemoteProvider._();
 
-  static WingRemoteProvider? _singleton;
+  static WingsRemoteProvider? _singleton;
 
   Dio dio = Dio();
-
-  int statusCode = 0;
-
-  bool get success =>
-      statusCode == 200 || statusCode == 201 || statusCode == 202;
 
   Future<dynamic> send({
     required WingsRequest request,
     required WingsRemoteMethod method,
+    List<int> successStates = const [200, 201, 202],
+    Function(Response, int)? onSuccess,
+    Function(Response, int)? onError,
     Function(int, int)? onSendProgress,
     Function(int, int)? onReceiveProgress,
   }) async {
     try {
-      var response = await dio
+      Response<dynamic> response = await dio
           .request(
         request.urlQueryString,
         data: request.body,
@@ -57,14 +55,19 @@ class WingRemoteProvider {
         },
       );
 
-      statusCode = response.statusCode!;
+      var statusCode = response.statusCode!;
 
-      if (!success) {
+      if (successStates.contains(statusCode)) {
+        if (onSuccess != null) onSuccess(response, statusCode);
+      } else {
         log('Server response with status code $statusCode',
             name: 'Wings Remote');
-        throw WingsException.fromStatusCode(statusCode);
+        if (onError != null) {
+          onError(response, statusCode);
+        } else {
+          throw WingsException.fromStatusCode(statusCode);
+        }
       }
-
       return response;
     } catch (exception) {
       _catchExceptions(exception);
@@ -76,6 +79,9 @@ class WingRemoteProvider {
     required String savePath,
     Function(int, int)? onProgress,
     VoidCallback? onComplete,
+    List<int> successStates = const [200, 201, 202],
+    Function(Response, int)? onSuccess,
+    Function(Response, int)? onError,
     bool overrideIfExists = false,
   }) async {
     if (await File(savePath).exists() && !overrideIfExists) {
@@ -103,13 +109,21 @@ class WingRemoteProvider {
         ).whenComplete(() {
           if (onComplete != null) onComplete();
         });
-        statusCode = response.statusCode!;
 
-        if (!success) {
+        var statusCode = response.statusCode!;
+
+        if (successStates.contains(statusCode)) {
+          if (onSuccess != null) onSuccess(response, statusCode);
+        } else {
           log('Server response with status code $statusCode',
-              name: 'Wings download');
-          throw WingsException.fromStatusCode(statusCode);
+              name: 'Wings Remote');
+          if (onError != null) {
+            onError(response, statusCode);
+          } else {
+            throw WingsException.fromStatusCode(statusCode);
+          }
         }
+
         return jsonDecode(response.data);
       } catch (exception) {
         _catchExceptions(exception);
@@ -118,8 +132,10 @@ class WingRemoteProvider {
   }
 
   void _catchExceptions(Object exception) {
+    var statusCode = 500;
     if (exception is DioError) {
       statusCode = exception.response?.statusCode ?? 500;
+      log(exception.response?.data, name: 'dio error');
     }
     throw WingsException.fromStatusCode(statusCode);
   }

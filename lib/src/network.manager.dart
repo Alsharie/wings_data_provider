@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -45,9 +47,7 @@ class WingsNetworkManager {
     return _hasConnection;
   }
 
-  WingsNetworkManager get singleton {
-    return _singleton!;
-  }
+
 
   Future<void> _updateState(ConnectivityResult result) async {
     if (result != ConnectivityResult.none) {
