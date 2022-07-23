@@ -1,23 +1,21 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class WingsNetworkManager {
-  static final StreamController<bool> _networkChange =
+   final StreamController<bool> _networkChange =
       StreamController.broadcast();
 
   /// event handler functions are called.
-  static void onNetworkChange(
+   void onNetworkChange(
     Function(bool)? onData, {
     Function? onError,
     Function()? onDone,
     bool? cancelOnError,
   }) {
-    _networkChange.stream.listen(
+    _singleton!._networkChange.stream.listen(
       onData,
       cancelOnError: cancelOnError,
       onDone: onDone,
