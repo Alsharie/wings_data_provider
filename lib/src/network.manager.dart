@@ -48,7 +48,13 @@ class WingsNetworkManager {
     return _hasConnection;
   }
 
-  _checker() {
+  _checker() async {
+    try {
+      await _updateState(await _connectivity.checkConnectivity());
+    } catch (exception) {
+      log(exception.toString());
+      _hasConnection = false;
+    }
     _connectionChecker.onStatusChange.listen((event) {
       if (_connectivityResult == ConnectivityResult.none) return;
 
@@ -61,7 +67,7 @@ class WingsNetworkManager {
   Future<void> _updateState(ConnectivityResult result) async {
     _connectivityResult = result;
     if (_connectivityResult != ConnectivityResult.none) {
-      _hasConnection = await InternetConnectionChecker().hasConnection;
+      _hasConnection = await _connectionChecker.hasConnection;
     } else {
       _hasConnection = false;
     }
