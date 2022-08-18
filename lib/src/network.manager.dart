@@ -5,11 +5,10 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class WingsNetworkManager {
-   final StreamController<bool> _networkChange =
-      StreamController.broadcast();
+  final StreamController<bool> _networkChange = StreamController.broadcast();
 
   /// event handler functions are called.
-   void onNetworkChange(
+  void onNetworkChange(
     Function(bool)? onData, {
     Function? onError,
     Function()? onDone,
@@ -26,6 +25,7 @@ class WingsNetworkManager {
   factory WingsNetworkManager() {
     if (_singleton == null) {
       _singleton = WingsNetworkManager._();
+      _singleton!._checker();
       _singleton!._connectivity.onConnectivityChanged.listen(
         _singleton!._updateState,
       );
@@ -38,17 +38,29 @@ class WingsNetworkManager {
   static WingsNetworkManager? _singleton;
 
   final Connectivity _connectivity = Connectivity();
+  var _connectivityResult = ConnectivityResult.none;
 
   bool _hasConnection = false;
+
+  final _connectionChecker = InternetConnectionChecker();
 
   bool get hasConnection {
     return _hasConnection;
   }
 
+  _checker() {
+    _connectionChecker.onStatusChange.listen((event) {
+      if (_connectivityResult == ConnectivityResult.none) return;
 
+      _hasConnection = event == InternetConnectionStatus.connected;
+
+      log(_hasConnection.toString(), name: 'connection listener');
+    });
+  }
 
   Future<void> _updateState(ConnectivityResult result) async {
-    if (result != ConnectivityResult.none) {
+    _connectivityResult = result;
+    if (_connectivityResult != ConnectivityResult.none) {
       _hasConnection = await InternetConnectionChecker().hasConnection;
     } else {
       _hasConnection = false;
