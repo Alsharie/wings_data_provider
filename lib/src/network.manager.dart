@@ -8,7 +8,7 @@ class WingsNetworkManager {
   final StreamController<bool> _networkChange = StreamController.broadcast();
 
   /// event handler functions are called.
-  void onNetworkChange(
+ static void onNetworkChange(
     Function(bool)? onData, {
     Function? onError,
     Function()? onDone,

@@ -82,6 +82,7 @@ class WingsRemoteProvider {
     List<int> successStates = const [200, 201, 202],
     Function(Response, int)? onSuccess,
     Function(Response, int)? onError,
+    CancelToken? cancelToken,
     bool overrideIfExists = false,
   }) async {
     if (await File(savePath).exists() && !overrideIfExists) {
@@ -92,6 +93,7 @@ class WingsRemoteProvider {
             .download(
           request.url,
           savePath,
+            cancelToken: cancelToken,
           options: Options(
             headers: request.header,
             receiveTimeout: 0,
