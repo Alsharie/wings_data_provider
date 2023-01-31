@@ -38,10 +38,10 @@ class WingsRemoteProvider {
           .request(
         request.urlQueryString,
         data: request.body,
-        responseType: responseType,
         options: Options(
           method: method.name,
           headers: request.header,
+          responseType: responseType,
           receiveTimeout: 0,
           validateStatus: (status) {
             return status != null && status < 500;
