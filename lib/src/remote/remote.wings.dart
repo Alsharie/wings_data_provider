@@ -31,12 +31,14 @@ class WingsRemoteProvider {
     Function(Response, int)? onError,
     Function(int, int)? onSendProgress,
     Function(int, int)? onReceiveProgress,
+    ResponseType? responseType,
   }) async {
     try {
       Response<dynamic> response = await dio
           .request(
         request.urlQueryString,
         data: request.body,
+        responseType: responseType,
         options: Options(
           method: method.name,
           headers: request.header,
@@ -93,7 +95,7 @@ class WingsRemoteProvider {
             .download(
           request.url,
           savePath,
-            cancelToken: cancelToken,
+          cancelToken: cancelToken,
           options: Options(
             headers: request.header,
             receiveTimeout: 0,
