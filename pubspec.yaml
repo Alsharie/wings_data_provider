@@ -1,6 +1,6 @@
 name: wings_data_provider
 description: wings_data_provider
-version: 0.0.1
+version: 1.0.1
 homepage:
 
 environment:
@@ -11,9 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  internet_connection_checker: ^0.0.1+4
-  connectivity_plus: ^2.3.5
-  dio: ^4.0.6
+  internet_connection_checker: ^1.0.0+1
+  connectivity_plus: ^3.0.3
+  dio: ^5.0.3
 
 dev_dependencies:
   flutter_test:
