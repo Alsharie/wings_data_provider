@@ -42,7 +42,7 @@ class WingsRemoteProvider {
           method: method.name,
           headers: request.header,
           responseType: responseType,
-          receiveTimeout: Duration.zero,
+          receiveTimeout: Duration(days: 1),
           validateStatus: (status) {
             return status != null && status < 500;
           },
@@ -98,7 +98,7 @@ class WingsRemoteProvider {
           cancelToken: cancelToken,
           options: Options(
             headers: request.header,
-            receiveTimeout: Duration.zero,
+            receiveTimeout: const Duration(days: 1),
             validateStatus: (status) {
               return status != null && status < 500;
             },
