@@ -42,7 +42,7 @@ class WingsRemoteProvider {
           method: method.name,
           headers: request.header,
           responseType: responseType,
-          receiveTimeout: 0,
+          receiveTimeout: Duration.zero,
           validateStatus: (status) {
             return status != null && status < 500;
           },
@@ -51,7 +51,7 @@ class WingsRemoteProvider {
         onReceiveProgress: onReceiveProgress,
       )
           .timeout(
-        Duration(milliseconds: dio.options.sendTimeout),
+        Duration(milliseconds: dio.options.sendTimeout!.inMilliseconds),
         onTimeout: () {
           throw WingsException.fromEnumeration(ExceptionTypes.timeout);
         },
@@ -98,7 +98,7 @@ class WingsRemoteProvider {
           cancelToken: cancelToken,
           options: Options(
             headers: request.header,
-            receiveTimeout: 0,
+            receiveTimeout: Duration.zero,
             validateStatus: (status) {
               return status != null && status < 500;
             },
@@ -106,7 +106,7 @@ class WingsRemoteProvider {
           onReceiveProgress: onProgress,
         )
             .timeout(
-          Duration(milliseconds: dio.options.sendTimeout),
+          Duration(milliseconds: dio.options.sendTimeout!.inMilliseconds),
           onTimeout: () {
             throw WingsException.fromEnumeration(ExceptionTypes.timeout);
           },
