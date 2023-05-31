@@ -4,7 +4,7 @@ version: 1.0.1
 homepage:
 
 environment:
-  sdk: ">=2.17.6 <3.0.0"
+  sdk: '>=3.0.1 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
 
   internet_connection_checker: ^1.0.0+1
-  connectivity_plus: ^3.0.3
-  dio: ^5.0.3
+  connectivity_plus: ^4.0.1
+  dio: ^5.1.2
 
 dev_dependencies:
   flutter_test:
