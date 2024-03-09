@@ -32,6 +32,7 @@ class WingsRemoteProvider {
     Function(int, int)? onSendProgress,
     Function(int, int)? onReceiveProgress,
     ResponseType? responseType,
+    CancelToken? cancelToken,
   }) async {
     try {
       Response<dynamic> response = await dio
@@ -42,13 +43,14 @@ class WingsRemoteProvider {
           method: method.name,
           headers: request.header,
           responseType: responseType,
-          receiveTimeout: Duration(days: 1),
+          receiveTimeout: const Duration(days: 1),
           validateStatus: (status) {
             return status != null && status < 500;
           },
         ),
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
+        cancelToken: cancelToken,
       )
           .timeout(
         Duration(milliseconds: dio.options.sendTimeout!.inMilliseconds),
